@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Cs6IsAncestorSiteInDesignMode
 {
@@ -14,6 +9,10 @@ namespace Cs6IsAncestorSiteInDesignMode
 
         public MyControl()
         {
+            // We're painting, so let's paint without flicker!
+            DoubleBuffered = true;
+            ResizeRedraw = true;
+
             // THIS WILL FAIL!
             // The Control can never be sited in the constructor.
             // So we cannot detect, if it will be in Design Mode.
@@ -33,12 +32,14 @@ namespace Cs6IsAncestorSiteInDesignMode
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.Clear(BackColor);
             _renderer = new TextContentRenderer(_statusText!, Font, Brushes.Black);
+
             _renderer.Render(
                 e.Graphics,
                 ClientRectangle,
-                TextContentRenderer.RenderModes.Center |
-                TextContentRenderer.RenderModes.ShowBorder);
+                TextContentRenderer.RenderParts.Center |
+                TextContentRenderer.RenderParts.ShowBorder);
         }
     }
 }
